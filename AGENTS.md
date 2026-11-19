@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Tracker state is one JSON blob per user in `public.user_state`, mirrored to localStorage by `src/lib/store.ts`; keeps the client store simple while syncing across devices.
+- `/admin` checks `has_role(admin)` for UI and again inside `getAdminOverview` before using the admin client; Lovable-only data (domains, security, usage) is shown as links since the app can't read it.

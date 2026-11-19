@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AccountMenu } from "@/components/strivish/AccountMenu";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useIsAdmin, useSession } from "@/hooks/use-session";
 import { AuthScreen } from "@/components/strivish/AuthScreen";
-import { connectCloud, levelOf, signOutLocal, useNow, useStore, xp } from "@/lib/store";
+import { connectCloud, levelOf, useNow, useStore, xp } from "@/lib/store";
 import { Week } from "@/components/strivish/Week";
 import { Month } from "@/components/strivish/Month";
 import { Goals } from "@/components/strivish/Goals";
@@ -35,10 +35,10 @@ function Index() {
   if (!ready) return <div className="min-h-screen bg-background" />;
   if (!session) return <AuthScreen />;
   if (synced !== uid) return <div className="flex min-h-screen items-center justify-center bg-background text-xs text-muted-foreground">Loading your tracker…</div>;
-  return <Tracker userId={uid!} />;
+  return <Tracker userId={uid!} user={session.user} />;
 }
 
-function Tracker({ userId }: { userId: string }) {
+function Tracker({ userId, user }: { userId: string; user: import("@supabase/supabase-js").User }) {
   const isAdmin = useIsAdmin(userId);
   const s = useStore();
   const now = useNow();
@@ -59,9 +59,7 @@ function Tracker({ userId }: { userId: string }) {
             <span className="rounded-full border border-border px-2 py-0.5 font-semibold">Level {levelOf(X).lvl} · {X} XP</span>
             <span className="font-semibold">{now.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" }).replace(",", "")}</span>
             <span className="text-muted-foreground">Saved</span>
-            <button className="btn-ghost" onClick={() => setDlg("settings")}>Data and settings</button>
-            {isAdmin && <Link to="/admin" className="btn-ghost">Admin</Link>}
-            <button className="btn-ghost" onClick={async () => { await supabase.auth.signOut(); signOutLocal(); }}>Sign out</button>
+            {user && <AccountMenu user={user} isAdmin={isAdmin} onSettings={() => setDlg("settings")} />}
           </div>
         </header>
         <nav className="flex gap-1 border-b border-border text-xs">

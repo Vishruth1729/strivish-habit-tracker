@@ -22,24 +22,42 @@ export function AuthScreen({ title = "Sign in to keep your progress" }: { title?
     const r = await lovable.auth.signInWithOAuth(p, { redirect_uri: window.location.origin + window.location.pathname });
     if (r.error) setMsg(r.error.message);
   };
+  const Logo = <svg viewBox="0 0 16 16" className="h-5 w-5 fill-brand"><rect x="1" y="9" width="3" height="6" /><rect x="6" y="5" width="3" height="10" /><rect x="11" y="1" width="3" height="14" /></svg>;
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
-      <div className="panel w-full max-w-sm">
-        <div className="panel-head flex items-center justify-center gap-2 py-3">
-          <svg viewBox="0 0 16 16" className="h-4 w-4 fill-foreground"><rect x="1" y="9" width="3" height="6" /><rect x="6" y="5" width="3" height="10" /><rect x="11" y="1" width="3" height="14" /></svg>
-          <span className="font-display text-sm">STRI<span className="text-brand">VISH</span> <span className="text-brand">2.0</span></span>
-        </div>
-        <form onSubmit={submit} className="space-y-3 p-4">
-          <p className="text-center text-xs text-muted-foreground">{title}</p>
-          <button type="button" className="btn-ghost flex w-full items-center justify-center gap-2 py-2" onClick={() => social("google")}>{G} Continue with Google</button>
-          <button type="button" className="btn-ghost flex w-full items-center justify-center gap-2 py-2" onClick={() => social("lovable")}><LovableMark /> Continue with Lovable</button>
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
-          <input className="field py-2" type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input className="field py-2" type="password" required minLength={6} placeholder="Password" value={pw} onChange={(e) => setPw(e.target.value)} />
-          <button disabled={busy} className="btn-solid w-full py-2">{mode === "in" ? "Sign in" : "Create account"}</button>
-          {msg && <p className="text-center text-xs text-brand-soft">{msg}</p>}
-          <p className="text-center text-xs text-muted-foreground">{mode === "in" ? "New here? " : "Have an account? "}
-            <button type="button" className="font-bold text-foreground underline" onClick={() => setMode(mode === "in" ? "up" : "in")}>{mode === "in" ? "Create an account" : "Sign in"}</button></p>
+    <div className="auth-bg relative flex min-h-screen items-center justify-center overflow-hidden p-4 text-foreground">
+      <div className="pointer-events-none absolute inset-0 auth-grid" />
+      <div className="relative grid w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-card/80 shadow-2xl backdrop-blur md:grid-cols-2">
+        <aside className="relative hidden flex-col justify-between bg-brand/10 p-8 md:flex">
+          <div className="flex items-center gap-2">{Logo}<span className="font-display text-lg font-bold">STRI<span className="text-brand">VISH</span> <span className="text-brand">2.0</span></span></div>
+          <div>
+            <h2 className="font-display text-3xl font-bold leading-tight">Strive daily<br />for what you <span className="text-brand">wish.</span></h2>
+            <p className="mt-3 text-sm text-muted-foreground">Habits, goals, streaks and focus — all in one calm dashboard that follows you across devices.</p>
+          </div>
+          <div className="flex h-24 items-end gap-1.5">
+            {[35, 55, 40, 70, 60, 85, 100].map((h, i) => <div key={i} className="auth-bar flex-1 rounded-t bg-brand" style={{ height: `${h}%`, animationDelay: `${i * 90}ms`, opacity: 0.35 + i * 0.09 }} />)}
+          </div>
+          <ul className="mt-4 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
+            <li>✦ Weekly habit grid</li><li>✦ Goals and progress</li><li>✦ Streaks, XP and badges</li><li>✦ Focus timer</li>
+          </ul>
+        </aside>
+        <form onSubmit={submit} className="space-y-3 p-6 sm:p-8">
+          <div className="flex items-center gap-2 md:hidden">{Logo}<span className="font-display text-base font-bold">STRI<span className="text-brand">VISH</span> <span className="text-brand">2.0</span></span></div>
+          <div className="flex rounded-full border border-border p-1 text-xs">
+            {(["in", "up"] as const).map((m) => <button key={m} type="button" onClick={() => { setMode(m); setMsg(null); }} className={`flex-1 rounded-full py-1.5 font-semibold transition ${mode === m ? "bg-brand text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>{m === "in" ? "Sign in" : "Sign up"}</button>)}
+          </div>
+          <div>
+            <h1 className="font-display text-2xl font-bold">{mode === "in" ? "Welcome back" : "Start your streak"}</h1>
+            <p className="mt-1 text-xs text-muted-foreground">{mode === "in" ? title : "Create a free account — your progress saves automatically."}</p>
+          </div>
+          <button type="button" className="btn-ghost flex w-full items-center justify-center gap-2 py-2.5" onClick={() => social("google")}>{G} Continue with Google</button>
+          <button type="button" className="btn-ghost flex w-full items-center justify-center gap-2 py-2.5" onClick={() => social("lovable")}><LovableMark /> Continue with Lovable</button>
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-muted-foreground"><span className="h-px flex-1 bg-border" />or with email<span className="h-px flex-1 bg-border" /></div>
+          <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Email
+            <input className="field mt-1 py-2.5 text-sm normal-case" type="email" required placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
+          <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Password
+            <input className="field mt-1 py-2.5 text-sm normal-case" type="password" required minLength={6} placeholder="At least 6 characters" value={pw} onChange={(e) => setPw(e.target.value)} /></label>
+          <button disabled={busy} className="btn-solid w-full py-2.5 text-sm">{busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}</button>
+          {msg && <p className="rounded border border-border bg-muted/40 p-2 text-center text-xs text-brand-soft">{msg}</p>}
         </form>
       </div>
     </div>

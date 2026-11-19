@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export type AdminUser = { id: string; email: string; createdAt: string; lastSignIn: string | null; provider: string; confirmed: boolean; isAdmin: boolean; habits: number; ticks: number; tasks: number; goals: number; focusMin: number; lastActive: string | null };
+export type AdminUser = { id: string; email: string; createdAt: string; lastSignIn: string | null; provider: string; confirmed: boolean; isAdmin: boolean; habits: number; ticks: number; tasks: number; goals: number; focusMin: number; lastActive: string | null; name: string | null; avatar: string | null; shared: boolean; profile: { habits: string[]; goals: { name: string; progress: number; target: number; unit: string }[] } | null };
 export type AdminOverview = {
   users: AdminUser[];
   views: { path: string; referrer: string | null; created_at: string; user_id: string | null }[];
@@ -40,6 +40,14 @@ export const getAdminOverview = createServerFn({ method: "POST" })
         goals: (d.goals ?? []).length,
         focusMin: (d.sessions ?? []).reduce((a: number, x: any) => a + (x?.minutes ?? 0), 0),
         lastActive: st?.updated_at ?? null,
+        name: (u.user_metadata?.["full_name"] as string) ?? (u.user_metadata?.["name"] as string) ?? null,
+        avatar: (u.user_metadata?.["avatar_url"] as string) ?? null,
+        shared: u.user_metadata?.["share_profile"] === true,
+        // Detailed profile only when the user has granted permission
+        profile: u.user_metadata?.["share_profile"] === true ? {
+          habits: (d.habits ?? []).map((h: any) => String(h?.name ?? "")),
+          goals: (d.goals ?? []).map((g: any) => ({ name: String(g?.name ?? ""), progress: Number(g?.progress ?? 0), target: Number(g?.target ?? 0), unit: String(g?.unit ?? "") })),
+        } : null,
       };
     });
     return {

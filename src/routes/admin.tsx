@@ -121,12 +121,8 @@ function SectionView({ sec, d, email }: { sec: Section; d: AdminOverview; email:
         </div>
         <Panel title="All users"><div className="overflow-x-auto"><table className="w-full text-xs">
           <thead><tr className="border-b border-border text-left text-[10px] uppercase tracking-wider text-muted-foreground">
-            {["Email", "Joined", "Last sign-in", "Method", "Habits", "Ticks", "Tasks done", "Goals", "Focus"].map((h) => <th key={h} className="p-2">{h}</th>)}</tr></thead>
-          <tbody>{d.users.map((u) => <tr key={u.id} className="border-b border-border">
-            <td className="p-2 font-semibold">{u.email}{u.isAdmin && <span className="ml-1 rounded bg-brand px-1 text-[9px] text-primary-foreground">admin</span>}{!u.confirmed && <span className="ml-1 text-[9px] text-muted-foreground">unconfirmed</span>}</td>
-            <td className="p-2">{day(u.createdAt)}</td><td className="p-2">{u.lastSignIn ? day(u.lastSignIn) : "—"}</td><td className="p-2">{u.provider}</td>
-            <td className="p-2">{u.habits}</td><td className="p-2">{u.ticks}</td><td className="p-2">{u.tasks}</td><td className="p-2">{u.goals}</td><td className="p-2">{u.focusMin} min</td>
-          </tr>)}</tbody></table></div></Panel>
+            {["", "Email", "Joined", "Last sign-in", "Method", "Habits", "Ticks", "Tasks done", "Goals", "Focus"].map((h) => <th key={h} className="p-2">{h}</th>)}</tr></thead>
+          <tbody>{d.users.map((u) => <UserRow key={u.id} u={u} day={day} />)}</tbody></table></div></Panel>
       </>);
     case "Storage":
       return (<>
@@ -168,4 +164,28 @@ function SectionView({ sec, d, email }: { sec: Section; d: AdminOverview; email:
 }
 function Info({ status, text, path }: { status: string; text: string; path: string }) {
   return (<><Stat label="Status" value={status} /><LinkCard text={text} path={path} label="Open in Lovable" /></>);
+}
+
+function UserRow({ u, day }: { u: AdminOverview["users"][number]; day: (s: string) => string }) {
+  const [open, setOpen] = useState(false);
+  return (<>
+    <tr className="cursor-pointer border-b border-border hover:bg-muted/40" onClick={() => setOpen(!open)}>
+      <td className="p-2 text-muted-foreground">{open ? "▾" : "▸"}</td>
+      <td className="p-2 font-semibold">{u.email}{u.isAdmin && <span className="ml-1 rounded bg-brand px-1 text-[9px] text-primary-foreground">admin</span>}{!u.confirmed && <span className="ml-1 text-[9px] text-muted-foreground">unconfirmed</span>}</td>
+      <td className="p-2">{day(u.createdAt)}</td><td className="p-2">{u.lastSignIn ? day(u.lastSignIn) : "—"}</td><td className="p-2">{u.provider}</td>
+      <td className="p-2">{u.habits}</td><td className="p-2">{u.ticks}</td><td className="p-2">{u.tasks}</td><td className="p-2">{u.goals}</td><td className="p-2">{u.focusMin} min</td>
+    </tr>
+    {open && <tr className="border-b border-border bg-muted/20"><td colSpan={10} className="p-3">
+      {u.profile ? (
+        <div className="flex flex-wrap gap-6">
+          <div className="flex items-center gap-3">
+            {u.avatar ? <img src={u.avatar} alt="" className="h-10 w-10 rounded-full" /> : <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand font-bold text-primary-foreground">{(u.name ?? u.email)[0]?.toUpperCase()}</div>}
+            <div><div className="font-bold">{u.name ?? "No name set"}</div><div className="text-[10px] text-muted-foreground">{u.email} · shared their profile with you</div></div>
+          </div>
+          <div><div className="mb-1 text-[10px] uppercase tracking-wider text-muted-foreground">Habits</div>{u.profile.habits.length ? u.profile.habits.map((h, i) => <div key={i}>• {h}</div>) : <div className="text-muted-foreground">None yet</div>}</div>
+          <div><div className="mb-1 text-[10px] uppercase tracking-wider text-muted-foreground">Goals</div>{u.profile.goals.length ? u.profile.goals.map((g, i) => <div key={i}>• {g.name} — {g.progress}/{g.target} {g.unit}</div>) : <div className="text-muted-foreground">None yet</div>}</div>
+        </div>
+      ) : <p className="text-muted-foreground">🔒 This user hasn't given permission to view their profile. They can allow it from their account menu (top right).</p>}
+    </td></tr>}
+  </>);
 }

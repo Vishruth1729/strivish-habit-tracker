@@ -31,7 +31,7 @@ export function Settings({ s, onClose }: { s: State; onClose: () => void }) {
   const imp = (f?: File) => f && f.text().then((t) => { try { const d = JSON.parse(t); update(() => d); onClose(); } catch { alert("That file could not be read."); } });
   return (
     <Modal title="Data and settings" onClose={onClose}>
-      <p className="text-xs text-muted-foreground">Your data is saved in this browser. Export a backup to move it to another device.</p>
+      <p className="text-xs text-muted-foreground">Your data is saved to your account and syncs across devices. You can also export a backup file.</p>
       <div className="flex flex-wrap gap-2">
         <button className="btn-solid" onClick={exp}>Export backup</button>
         <label className="btn-ghost cursor-pointer">Import backup<input type="file" accept="application/json" className="hidden" onChange={(e) => imp(e.target.files?.[0])} /></label>

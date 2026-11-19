@@ -10,6 +10,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { useLocation } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -122,6 +124,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useLocation({ select: (l) => l.pathname });
+  useEffect(() => {
+    if (pathname.startsWith("/admin")) return;
+    supabase.auth.getSession().then(({ data }) =>
+      supabase.from("page_views").insert({ path: pathname, referrer: document.referrer ? new URL(document.referrer).hostname : null, user_id: data.session?.user.id ?? null }),
+    );
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>

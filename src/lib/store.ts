@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Habit = { id: string; name: string };
 export type Task = { id: string; text: string; done: boolean };
@@ -30,12 +31,35 @@ function load(): State {
   try { const raw = localStorage.getItem(KEY); state = raw ? { ...defaults(), ...JSON.parse(raw) } : defaults(); } catch { state = defaults(); }
   return state!;
 }
+let cloudUser: string | null = null;
+let saveTimer: ReturnType<typeof setTimeout> | null = null;
+function pushCloud() {
+  if (!cloudUser || !state) return;
+  const uid = cloudUser, data = state;
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    supabase.from("user_state").upsert({ user_id: uid, data: data as never, updated_at: new Date().toISOString() }).then(({ error }) => error && console.error(error));
+  }, 600);
+}
+/** Load this account's saved data from the cloud (or seed it from this browser on first sign-in). */
+export async function connectCloud(userId: string | null) {
+  cloudUser = userId;
+  if (!userId) return;
+  const { data } = await supabase.from("user_state").select("data").eq("user_id", userId).maybeSingle();
+  if (data?.data && Object.keys(data.data as object).length) {
+    state = { ...defaults(), ...(data.data as Partial<State>) };
+    localStorage.setItem(KEY, JSON.stringify(state));
+    listeners.forEach((l) => l());
+  } else { load(); pushCloud(); }
+}
+export function signOutLocal() { cloudUser = null; state = defaults(); localStorage.removeItem(KEY); listeners.forEach((l) => l()); }
 export function update(fn: (s: State) => State) {
   state = fn(load());
   localStorage.setItem(KEY, JSON.stringify(state));
   listeners.forEach((l) => l());
+  pushCloud();
 }
-export function resetAll() { state = defaults(); localStorage.setItem(KEY, JSON.stringify(state)); listeners.forEach((l) => l()); }
+export function resetAll() { update(() => defaults()); }
 export function useStore(): State | null {
   const [s, setS] = useState<State | null>(null);
   useEffect(() => { setS(load()); const l = () => setS({ ...load() }); listeners.add(l); return () => { listeners.delete(l); }; }, []);

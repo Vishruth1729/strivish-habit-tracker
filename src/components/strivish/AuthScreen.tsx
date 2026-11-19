@@ -50,7 +50,6 @@ export function AuthScreen({ title = "Sign in to keep your progress" }: { title?
             <p className="mt-1 text-xs text-muted-foreground">{mode === "in" ? title : "Create a free account — your progress saves automatically."}</p>
           </div>
           <button type="button" className="btn-ghost flex w-full items-center justify-center gap-2 py-2.5" onClick={() => social("google")}>{G} Continue with Google</button>
-          <button type="button" className="btn-ghost flex w-full items-center justify-center gap-2 py-2.5" onClick={() => social("lovable")}><LovableMark /> Continue with Lovable</button>
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-muted-foreground"><span className="h-px flex-1 bg-border" />or with email<span className="h-px flex-1 bg-border" /></div>
           <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Email
             <input className="field mt-1 py-2.5 text-sm normal-case" type="email" required placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>

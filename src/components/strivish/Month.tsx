@@ -46,7 +46,7 @@ export function Month({ s, today, onEditHabits }: { s: State; today: Date; onEdi
           <tbody>
             {hStats.map(({ h, c, pct }) => (<tr key={h.id} className="border-b border-border">
               <td className="whitespace-nowrap p-1.5 font-semibold">{h.name}</td>
-              {days.map((d) => <td key={d.getDate()} className={`text-center ${dkey(d) === tk ? "bg-muted" : ""}`}><Check size="sm" checked={isChecked(s, dkey(d), h.id)} dim={dkey(d) > tk} onChange={() => toggleCheck(dkey(d), h.id)} /></td>)}
+              {days.map((d) => <td key={d.getDate()} className={`text-center ${dkey(d) === tk ? "bg-muted" : ""}`}><Check size="sm" checked={isChecked(s, dkey(d), h.id)} dim={dkey(d) !== tk} disabled={dkey(d) !== tk} onChange={() => toggleCheck(dkey(d), h.id)} /></td>)}
               <td className="text-center font-bold">{elapsed}</td><td className="text-center">{c}</td><td className="text-center">{elapsed - c}</td><td className="px-1"><Bar pct={pct} /></td><td className="text-center font-bold">{Math.round(pct * 100)}%</td>
             </tr>))}
             <tr className="bg-muted"><td className="p-1.5 font-bold" colSpan={n + 6}>Daily check-in</td></tr>

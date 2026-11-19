@@ -44,14 +44,14 @@ export function Week({ s, today, onEditHabits }: { s: State; today: Date; onEdit
               const c = days.filter((d) => isChecked(s, dkey(d), h.id)).length;
               return (<tr key={h.id} className="border-b border-border">
                 <td className="p-1.5 font-semibold">{h.name}</td>
-                {days.map((d, i) => <td key={i} className={`text-center py-2 ${dkey(d) === tk ? "bg-muted" : ""}`}><Check checked={isChecked(s, dkey(d), h.id)} dim={dkey(d) > tk} onChange={() => toggleCheck(dkey(d), h.id)} /></td>)}
+                {days.map((d, i) => <td key={i} className={`text-center py-2 ${dkey(d) === tk ? "bg-muted" : ""}`}><Check checked={isChecked(s, dkey(d), h.id)} dim={dkey(d) !== tk} disabled={dkey(d) !== tk} onChange={() => toggleCheck(dkey(d), h.id)} /></td>)}
                 <td className="px-2"><div className="flex items-center gap-2"><Bar pct={c / 7} /><span className="w-8 text-right font-bold">{Math.round((c / 7) * 100)}%</span></div></td>
               </tr>);
             })}</tbody>
           </table>
           <div className="flex items-center gap-3 p-2 text-xs text-muted-foreground">
             <button className="btn-ghost" onClick={onEditHabits}>Edit habits</button>
-            Tick a box to log a habit. Boxes after today are dimmed but you can plan ahead.
+            Habits can only be ticked for today. Past and future days are locked.
           </div>
         </Panel>
         <Panel title="Overall progress" className="self-start">

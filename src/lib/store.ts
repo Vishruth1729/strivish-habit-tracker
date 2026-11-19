@@ -47,7 +47,9 @@ export const dkey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).
 export const addDays = (d: Date, n: number) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 export const startOfWeek = (d: Date) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); const w = (x.getDay() + 6) % 7; return addDays(x, -w); };
 export const isChecked = (s: State, date: string, hid: string) => (s.checks[date] || []).includes(hid);
+export const canEditHabitDay = (date: string, now = new Date()) => date === dkey(now);
 export function toggleCheck(date: string, hid: string) {
+  if (!canEditHabitDay(date)) return;
   update((s) => { const cur = s.checks[date] || []; return { ...s, checks: { ...s.checks, [date]: cur.includes(hid) ? cur.filter((x) => x !== hid) : [...cur, hid] } }; });
 }
 export const dayRate = (s: State, date: string) => s.habits.length ? (s.checks[date] || []).filter((h) => s.habits.some((x) => x.id === h)).length / s.habits.length : 0;

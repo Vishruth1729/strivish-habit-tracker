@@ -52,10 +52,10 @@ export function LineChart({ values, labels, max = 100, ticks = [0, 25, 50, 75, 1
     </svg>
   );
 }
-export function Check({ checked, onChange, dim, size = "md" }: { checked: boolean; onChange: () => void; dim?: boolean; size?: "sm" | "md" }) {
+export function Check({ checked, onChange, dim, size = "md", disabled }: { checked: boolean; onChange: () => void; dim?: boolean; size?: "sm" | "md"; disabled?: boolean }) {
   return (
-    <button type="button" aria-pressed={checked} onClick={onChange}
-      className={`check ${size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5"} ${checked ? "check-on" : ""} ${dim && !checked ? "opacity-40" : ""}`}>
+    <button type="button" aria-pressed={checked} onClick={onChange} disabled={disabled}
+      className={`check ${size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5"} ${checked ? "check-on" : ""} ${dim && !checked ? "opacity-40" : ""} ${disabled ? "cursor-not-allowed" : ""}`}>
       {checked && <svg viewBox="0 0 12 12" className="h-full w-full"><path d="M2.5 6.5l2.2 2L9.5 3.5" fill="none" stroke="currentColor" strokeWidth={2} /></svg>}
     </button>
   );

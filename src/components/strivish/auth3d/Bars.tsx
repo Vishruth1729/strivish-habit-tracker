@@ -21,7 +21,7 @@ export function Bars({ still }: { still: boolean }) {
       const x = (i - 3) * GAP;
       const near = Math.max(0, 1 - Math.abs(authFx.mouseX * 2.2 - x) / 0.9) * (still ? 0 : 0.35);
       const bob = still ? 0 : Math.sin(t * 1.3 + i * 0.7) * 0.05;
-      const target = HEIGHTS[i] * rise * (1 + burstK * 1.6) + near;
+      const target = (HEIGHTS[i] ?? 1) * rise * (1 + burstK * 1.6) + near;
       g.scale.y = THREE.MathUtils.damp(g.scale.y, Math.max(target, 0.001), 8, Math.min(dt, 0.05));
       g.position.y = bob;
     });

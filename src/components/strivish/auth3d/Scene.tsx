@@ -15,8 +15,8 @@ function Rig({ still, mobile }: { still: boolean; mobile: boolean }) {
     const orbit = authFx.mode === "up" ? 0.35 : 0;
     const max = THREE.MathUtils.degToRad(5);
     const ax = still ? 0 : authFx.mouseX * max, ay = still ? 0 : authFx.mouseY * max;
-    const ang = THREE.MathUtils.damp((cam.userData.ang as number) ?? 0, orbit + ax, 3, d);
-    cam.userData.ang = ang;
+    const ang = THREE.MathUtils.damp((cam.userData["ang"] as number) ?? 0, orbit + ax, 3, d);
+    cam.userData["ang"] = ang;
     const r = mobile ? 7.5 : 8, cx = mobile ? -2.6 : 0;
     cam.position.set(cx + Math.sin(ang) * r, 1 + ay * 6, Math.cos(ang) * r);
     cam.lookAt(mobile ? -2.6 : 0, 0.2, 0);

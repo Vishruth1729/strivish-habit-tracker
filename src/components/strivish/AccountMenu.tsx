@@ -11,6 +11,12 @@ export function AccountMenu({ user, isAdmin, onSettings }: { user: User; isAdmin
   const [saved, setSaved] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const md = data.user?.user_metadata; if (!md) return;
+      setShare(md["share_profile"] === true); setName(md["full_name"] ?? md["name"] ?? "");
+    });
+  }, []);
+  useEffect(() => {
     const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
     document.addEventListener("mousedown", h); return () => document.removeEventListener("mousedown", h);
   }, []);

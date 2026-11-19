@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { addDays, dayRate, dkey, isChecked, startOfWeek, toggleCheck, uid, update, type State } from "@/lib/store";
-import { Bar, Check, LineChart, Panel, Ring } from "./ui";
+import { Bar, BarChart, Check, Panel, Ring } from "./ui";
 
 const DN = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -56,7 +56,7 @@ export function Week({ s, today, onEditHabits }: { s: State; today: Date; onEdit
         </Panel>
         <Panel title="Overall progress" className="self-start">
           <div className="flex items-center gap-2 p-2">
-            <div className="flex-1"><LineChart values={days.map((d) => (dkey(d) <= tk ? dayRate(s, dkey(d)) * 100 : null))} labels={DN} highlight={days.findIndex((d) => dkey(d) === tk)} /></div>
+            <div className="flex-1"><BarChart width={340} height={220} values={days.map((d) => (dkey(d) <= tk ? dayRate(s, dkey(d)) * 100 : null))} labels={DN} highlight={days.findIndex((d) => dkey(d) === tk)} /></div>
             <div className="flex flex-col items-center gap-2 px-2"><Ring pct={total ? done / total : 0} size={72} stroke={8}><span className="font-bold">{Math.round(total ? (done / total) * 100 : 0)}%</span></Ring><span className="text-xs text-muted-foreground">{done} / {total} done</span></div>
           </div>
         </Panel>

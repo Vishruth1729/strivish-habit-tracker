@@ -60,3 +60,29 @@ export function Check({ checked, onChange, dim, size = "md", disabled }: { check
     </button>
   );
 }
+
+export function BarChart({ values, labels, max = 100, ticks = [0, 25, 50, 75, 100], highlight, height = 200, every = 1, showValues = true, width = 600 }: { width?: number; values: (number | null)[]; labels: string[]; max?: number; ticks?: number[]; highlight?: number; height?: number; every?: number; showValues?: boolean }) {
+  const W = width, H = height, pl = 28, pb = 18, pt = 14, pr = 8;
+  const slot = (W - pl - pr) / values.length, bw = slot * 0.62;
+  const y = (v: number) => pt + (H - pt - pb) * (1 - Math.min(v, max) / max);
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: H }}>
+      {ticks.map((t) => (
+        <g key={t}><line x1={pl} x2={W - pr} y1={y(t)} y2={y(t)} className="stroke-border" strokeWidth={1} />
+          <text x={pl - 6} y={y(t) + 3} textAnchor="end" className="fill-muted-foreground" fontSize={8}>{t}</text></g>
+      ))}
+      {values.map((v, i) => {
+        const cx = pl + slot * i + slot / 2;
+        return (
+          <g key={i}>
+            {v != null && v > 0 && <>
+              <rect x={cx - bw / 2} y={y(v)} width={bw} height={y(0) - y(v)} rx={1.5} className={i === highlight ? "fill-brand" : "fill-foreground"} />
+              {showValues && <text x={cx} y={y(v) - 3} textAnchor="middle" fontSize={8} className="fill-foreground font-bold">{Math.round(v)}</text>}
+            </>}
+            {i % every === 0 && <text x={cx} y={H - 4} textAnchor="middle" fontSize={8} className={i === highlight ? "fill-foreground font-bold" : "fill-muted-foreground"}>{labels[i]}</text>}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}

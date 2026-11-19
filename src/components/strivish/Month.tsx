@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { dayRate, dkey, isChecked, toggleCheck, update, type State } from "@/lib/store";
-import { Bar, Check, LineChart, Panel, Stat } from "./ui";
+import { Bar, BarChart, Check, Panel, Stat } from "./ui";
 
 const MN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const L = ["S", "M", "T", "W", "T", "F", "S"];
@@ -33,7 +33,7 @@ export function Month({ s, today, onEditHabits }: { s: State; today: Date; onEdi
         <Stat label="Completion" value={`${goal ? Math.round((completed / goal) * 100) : 0}%`} />
       </div>
       <div className="grid gap-3 lg:grid-cols-[1.5fr_1fr]">
-        <Panel title="Daily progress"><div className="p-2"><LineChart height={240} values={days.map((d) => (dkey(d) <= tk ? dayRate(s, dkey(d)) * 100 : null))} labels={days.map((d) => String(d.getDate()))} every={2} highlight={days.findIndex((d) => dkey(d) === tk)} /></div></Panel>
+        <Panel title="Daily progress"><div className="p-2"><BarChart showValues={false} height={240} values={days.map((d) => (dkey(d) <= tk ? dayRate(s, dkey(d)) * 100 : null))} labels={days.map((d) => String(d.getDate()))} every={2} highlight={days.findIndex((d) => dkey(d) === tk)} /></div></Panel>
         <Panel title="Top habits"><div className="space-y-2 p-3">{top.map((t, i) => (
           <div key={t.h.id} className="flex items-center gap-3 text-xs"><span className="w-3 text-muted-foreground">{i + 1}</span><div className="flex-1"><div className="mb-1 font-semibold">{t.h.name}</div><Bar pct={t.pct} /></div><span className="w-8 text-right font-bold">{Math.round(t.pct * 100)}%</span></div>
         ))}</div></Panel>

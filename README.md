@@ -6,22 +6,33 @@ A habit tracking web app that helps you build good habits and stay consistent, o
 
 ## Screenshots
 
-**Dashboard**
-![STRIVISH dashboard](https://strivish.lovable.app)
-
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/d2106137-87df-4b8c-af19-2136912a35b4" />
+
+----------------------------------------------------------------
 
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/03159458-a1ad-48c0-8847-57c91a7d68aa" />
 
+----------------------------------------------------------------
+
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/54da16c1-f90f-4225-9b61-72378c5eb0ab" />
+
+----------------------------------------------------------------
 
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/b6a82fa2-d360-4891-a5c4-64620801cd57" />
 
+----------------------------------------------------------------
+
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/f84f7dd7-b490-48f5-aa4c-909038d46532" />
+
+----------------------------------------------------------------
 
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/0b318996-740a-4829-84bd-ead09a7fcc45" />
 
+----------------------------------------------------------------
+
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/ff7b078b-1b2c-4d2b-9973-267afdcf3a3c" />
+
+----------------------------------------------------------------
 
 <img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/79f4f27a-393c-4c87-86d7-9119fe0c2953" />
 
